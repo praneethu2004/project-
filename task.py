@@ -1,58 +1,78 @@
-quiz_questions = [
-    {
-        "question": "What is the capital of France?",
-        "options": ["A. Berlin", "B. Madrid", "C. Paris", "D. Rome"],
-        "answer": "C"
-    },
-    {
-        "question": "Which planet is known as the Red Planet?",
-        "options": ["A. Earth", "B. Mars", "C. Jupiter", "D. Venus"],
-        "answer": "B"
-    },
-    {
-        "question": "What is the largest ocean on Earth?",
-        "options": ["A. Atlantic Ocean", "B. Indian Ocean", "C. Southern Ocean", "D. Pacific Ocean"],
-        "answer": "D"
-    },
-    {
-        "question": "What is the powerhouse of the cell?",
-        "options": ["A. Nucleus", "B. Ribosome", "C. Mitochondria", "D. Golgi apparatus"],
-        "answer": "C"
-    },
-    {
-        "question": "Who wrote 'To be, or not to be'?",
-        "options": ["A. Charles Dickens", "B. William Shakespeare", "C. Jane Austen", "D. Mark Twain"],
-        "answer": "B"
-    }
-]
+class Quiz:
+    def __init__(self):
+        self.questions = []  # List of questions
+        self.options = []    # List of options for each question
+        self.answers = []    # List of correct answers
 
-def ask_question(question):
-    print("\n" + question["question"])
-    for option in question["options"]:
-        print(option)
-    user_answer = input("Please enter the letter of your answer: ").upper()
-    return user_answer
+    def add_question(self, question, options, answer):
+        """
+        Adds a question, its options, and the correct answer to the quiz.
+        """
+        self.questions.append(question)
+        self.options.append(options)
+        self.answers.append(answer)
 
-def check_answer(question, user_answer):
-    return user_answer == question["answer"]
+    def conduct_quiz(self):
+        """
+        Conducts the quiz, asks questions, and calculates the score.
+        """
+        score = 0
+        
+        print("\nStarting the quiz! Select the correct option for the following questions:\n")
+        
+        for i, question in enumerate(self.questions):
+            print(f"Q{i + 1}: {question}")
+            for j, option in enumerate(self.options[i]):
+                print(f"  {j + 1}. {option}")
+            
+            user_answer = input("Your answer (enter the option number): ")
+            
+            # Check if the input is a valid option
+            if user_answer.isdigit() and 1 <= int(user_answer) <= len(self.options[i]):
+                selected_option = self.options[i][int(user_answer) - 1]
+                if selected_option == self.answers[i]:
+                    print("Correct!")
+                    score += 1
+                else:
+                    print(f"Incorrect! The correct answer is: {self.answers[i]}")
+            else:
+                print("Invalid option selected.")
+        
+        print(f"\nYour total score is: {score}/{len(self.questions)}")
 
-def display_score(score, total_questions):
-    print(f"\nYour final score is: {score}/{total_questions}")
+def main():
+    quiz = Quiz()
 
-def run_quiz():
-    score = 0
-    total_questions = len(quiz_questions)
-    print(f"\nStarting the quiz... Total questions: {total_questions}\n")
-    
-    for question in quiz_questions:
-        user_answer = ask_question(question)
-        if check_answer(question, user_answer):
-            print("Correct!\n")
-            score += 1
+    while True:
+        print("\nQuiz Management")
+        print("1. Add a question")
+        print("2. Conduct the quiz")
+        print("3. Exit")
+        
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+            question = input("Enter the quiz question: ")
+            options = []
+            for i in range(4):  # Assuming 4 options per question
+                option = input(f"Enter option {i + 1}: ")
+                options.append(option)
+            answer = input("Enter the correct answer: ")
+            quiz.add_question(question, options, answer)
+            print("Question added!")
+
+        elif choice == "2":
+            if not quiz.questions:
+                print("No questions available. Please add questions first.")
+            else:
+                quiz.conduct_quiz()
+
+        elif choice == "3":
+            print("Exiting the quiz management system.")
+            break
+
         else:
-            print(f"Incorrect! The correct answer is {question['answer']}.\n")
-    
-    display_score(score, total_questions)
+            print("Invalid choice. Please try again.")
 
-if __name__ == "_main_":
-    run_quiz()
+if __name__ == "__main__":
+    main()
